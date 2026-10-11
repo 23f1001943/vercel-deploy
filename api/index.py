@@ -23,9 +23,17 @@ def load_telemetry():
         return pd.read_json(TELEMETRY_FILE)
     return pd.DataFrame()
 
+@app.get("/")
+def read_root():
+    return {"status": "active", "message": "Telemetry API is running. Send a POST request with JSON body."}
+
 @app.post("/")
 async def analyze_telemetry(request: Request):
-    body = await request.json()
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+        
     requested_regions = body.get("regions", [])
     threshold_ms = body.get("threshold_ms", 180)
     

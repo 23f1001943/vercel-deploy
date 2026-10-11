@@ -6,11 +6,11 @@ import os
 
 app = FastAPI()
 
-# Enable CORS for all origins, methods, and headers
+# Force CORS headers on every response via Middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,  # Must be False when allow_origins=["*"]
     allow_methods=["*"],
     allow_headers=["*"],
     expose_headers=["*"],
@@ -25,7 +25,7 @@ def load_telemetry():
 
 @app.get("/")
 def read_root():
-    return {"status": "active", "message": "Telemetry API is running. Send a POST request with JSON body."}
+    return {"status": "active"}
 
 @app.post("/")
 async def analyze_telemetry(request: Request):
